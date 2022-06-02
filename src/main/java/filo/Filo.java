@@ -4,6 +4,8 @@ import java.util.*;
 
 public class Filo implements Runnable{
 
+    static Comparator<Object> comparator = Comparator.comparingInt(Object::hashCode);
+
     Object left;
     Object right;
     String name;
@@ -11,15 +13,17 @@ public class Filo implements Runnable{
 
     Random random = new Random();
 
-    public Filo(String name, Object left, Object right) {
+    public Filo(String name, Object first, Object second) {
         this.name = name;
 
-        Set<Object> set = new HashSet<>();
-        set.add(left);
-        set.add(right);
-        Iterator<Object> iterator = set.stream().iterator();
-        this.left = iterator.next();
-        this.right = iterator.next();
+        if (comparator.compare(first, second) == 0) throw new RuntimeException("2 одинаковых вилки в одни руки");
+
+        this.left = comparator.compare(first, second) > 0 ? first : second;
+        this.right = comparator.compare(first, second) > 0 ? second : first;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override

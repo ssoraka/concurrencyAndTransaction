@@ -1,40 +1,30 @@
 package filo;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class Main {
 
+    final static int FILO_COUNT = 10;
 
     public static void main(String[] args) {
+        List<Object> keys = Stream.generate(() -> new Object())
+                .limit(FILO_COUNT)
+                .collect(Collectors.toList());
+        keys.add(keys.get(0));
 
-//        Arrays.stream(args).forEach(System.out::println);
-//
-//        for (Map.Entry<String, String> e : System.getenv().entrySet()) {
-//            System.out.println(e.getKey() + " " + e.getValue());
-//        }
-//
-//        System.exit(1);
-
-        Object key1 = new Object();
-        Object key2 = new Object();
-
-        Filo f1 = new Filo("f1", key1, key2);
-        Filo f2 = new Filo("f2", key2, key1);
-
-        ArrayList<Thread> threads = new ArrayList<>();
-        threads.add(start(f1, "f1"));
-        threads.add(start(f2, "f2"));
-
-        int i = 10;
-
-        RunnableWithException.silent(() -> threads.get(0).join());
-        RunnableWithException.silent(() -> threads.get(1).join());
+        IntStream.iterate(0, i -> i + 1)
+                .limit(FILO_COUNT)
+                .mapToObj(i -> start(new Filo("f" + i, keys.get(i), keys.get(i + 1))))
+                .collect(Collectors.toList())
+                .forEach(elem -> RunnableWithException.silent(elem::join));
     }
 
-    static Thread start(Filo f, String name) {
+    static Thread start(Filo f) {
         Thread thread = new Thread(f);
-        thread.setName(name);
+        thread.setName(f.getName());
         thread.setDaemon(true);
         thread.start();
         return thread;
