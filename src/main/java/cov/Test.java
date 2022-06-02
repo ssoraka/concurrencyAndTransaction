@@ -3,7 +3,7 @@ package cov;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Test {
+public class Test { //ковариация
     public static void main(String[] args) {
         Integer a = 1;
 
