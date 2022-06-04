@@ -1,5 +1,7 @@
 package test;
 
+import javax.swing.text.html.Option;
+import java.util.Optional;
 import java.util.concurrent.locks.*;
 
 public class Main {
@@ -10,6 +12,8 @@ public class Main {
         Main m3 = m.concat(m2);
 
 //        m.test1();
+        Optional<Object> empty = Optional.empty();
+
         System.out.println("new".hashCode());
 
         System.out.println(Runtime.getRuntime().freeMemory() / 8 /1024/1024 + " " + Runtime.getRuntime().totalMemory() / 8/1024/1024 + " " + Runtime.getRuntime().maxMemory() / 8 / 1024/1024);
