@@ -8,7 +8,6 @@ import java.util.concurrent.atomic.AtomicReference;
 public class TransactionService {
 
     List<Account> accounts;
-//    AtomicReference<Random> random = new AtomicReference<>(new Random());
     Random random = new Random();
     volatile boolean isTransfer = true;
 
@@ -35,25 +34,17 @@ public class TransactionService {
 
         try {
             first.lock();
-            if (first == from && first.has(count)) {
-                try {
-                    second.lock();
-                    first.sub(count);
-                    second.add(count);
-                } finally {
-                    second.unlock();
+            if (first == from && !from.has(count)) return ;
+            try {
+                second.lock();
+                if (from.has(count)) {
+                    from.sub(count);
+                    to.add(count);
                 }
-            } else if (first == to) {
-                try {
-                    second.lock();
-                    if (second.has(count)) {
-                        second.sub(count);
-                        first.add(count);
-                    }
-                } finally {
-                    second.unlock();
-                }
+            } finally {
+                second.unlock();
             }
+
         } finally {
             first.unlock();
         }
