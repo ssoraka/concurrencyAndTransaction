@@ -9,7 +9,8 @@ public class Test3 implements Runnable{
     static int value = 0;
 
     public static void main(String[] args) {
-        // все синхронизированные методы синхронизируются по классу
+        // все статические синхронизированные методы синхронизируются по классу
+        // нестатические - по объекту
         List<Thread> threads = Arrays.asList(
             new Thread(() -> {
                 for (int i = 0; i < 1000000; i++) {
